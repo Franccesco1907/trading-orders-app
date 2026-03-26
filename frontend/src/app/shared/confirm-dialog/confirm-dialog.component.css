@@ -1,0 +1,103 @@
+:host {
+  display: block;
+}
+
+.confirm-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 2rem 1.25rem;
+}
+
+.confirm-dialog__icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-red) 15%, var(--bg-card));
+  border: 2px solid color-mix(in srgb, var(--accent-red) 35%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.confirm-dialog__icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: var(--accent-orange);
+}
+
+.confirm-dialog__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.75rem;
+}
+
+.confirm-dialog__body {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem;
+  max-width: 340px;
+}
+
+.confirm-dialog__order-id {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  background: color-mix(in srgb, var(--border-color) 60%, var(--bg-card));
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: 'Roboto Mono', 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: var(--text-primary);
+}
+
+.confirm-dialog__confirm-btn {
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  background: var(--accent-red);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-bottom: 0.75rem;
+}
+
+.confirm-dialog__confirm-btn:hover {
+  background: color-mix(in srgb, var(--accent-red) 85%, #000);
+}
+
+.confirm-dialog__cancel-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0.4rem 1rem;
+  transition: color 0.15s;
+  margin-bottom: 1.25rem;
+}
+
+.confirm-dialog__cancel-btn:hover {
+  color: var(--text-primary);
+}
+
+.confirm-dialog__footer {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+}

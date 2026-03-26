@@ -1,0 +1,52 @@
+services:
+  frontend:
+    container_name: trading-orders-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/workspace/frontend
+      - /workspace/frontend/node_modules
+    ports:
+      - "4200:4200"
+    command: [ "npm", "run", "start" ]
+
+  backend:
+    container_name: trading-orders-backend
+    depends_on:
+      - redis
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/workspace/backend
+      - /workspace/backend/node_modules
+    ports:
+      - "3000:3000"
+    command: [ "npm", "run", "start:dev" ]
+
+  postgres:
+    container_name: postgres
+    image: postgres:17.5-alpine
+    env_file:
+      - ./backend/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    container_name: redis
+    image: redis:8.0-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./backend/redis.conf:/usr/local/etc/redis/redis.conf
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+
+volumes:
+  postgres_data:
+  redis_data:
+
+

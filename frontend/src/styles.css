@@ -1,0 +1,324 @@
+/* Global styles and Material theme (M3) */
+@import '@angular/material/prebuilt-themes/azure-blue.css';
+
+:root {
+  --bg-primary: #080c19;
+  --bg-sidebar: #0c1025;
+  --bg-card: #111631;
+  --bg-card-hover: #161d3a;
+  --bg-header: #080c19;
+  --bg-input: #0e1328;
+  --border-color: #1a2240;
+  --text-primary: #e2e8f0;
+  --text-secondary: #64748b;
+  --text-muted: #475569;
+  --accent-blue: #3b82f6;
+  --accent-green: #22c55e;
+  --accent-red: #ef4444;
+  --accent-orange: #f59e0b;
+  --accent-purple: #8b5cf6;
+  --accent-teal: #06b6d4;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Material overrides for dark theme */
+.mat-mdc-table {
+  background: transparent !important;
+}
+
+.mat-mdc-header-cell {
+  color: var(--text-secondary) !important;
+  background: transparent !important;
+  border-bottom-color: var(--border-color) !important;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.mat-mdc-cell {
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+.mat-mdc-row:hover {
+  background-color: var(--bg-card-hover) !important;
+}
+
+.mat-mdc-paginator {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+}
+
+.mat-mdc-paginator .mat-mdc-select-value {
+  color: var(--text-secondary) !important;
+}
+
+.mat-mdc-paginator .mat-mdc-icon-button {
+  color: var(--text-secondary) !important;
+}
+
+.mat-mdc-paginator .mat-mdc-select {
+  --mat-select-trigger-text-color: var(--text-secondary);
+}
+
+.mat-mdc-paginator .mat-mdc-paginator-range-label {
+  color: var(--text-secondary);
+}
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: var(--border-color);
+  --mdc-outlined-text-field-focus-outline-color: var(--accent-blue);
+  --mdc-outlined-text-field-label-text-color: var(--text-secondary);
+  --mdc-outlined-text-field-input-text-color: var(--text-primary);
+  --mdc-outlined-text-field-hover-outline-color: var(--text-muted);
+  --mdc-filled-text-field-container-color: var(--bg-input);
+}
+
+.mat-mdc-select-panel {
+  background: var(--bg-card) !important;
+}
+
+.mat-mdc-option {
+  color: var(--text-primary) !important;
+}
+
+.mat-mdc-option:hover {
+  background: var(--bg-card-hover) !important;
+}
+
+.mat-mdc-card {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: var(--bg-card);
+  --mdc-snackbar-supporting-text-color: var(--text-primary);
+}
+
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--accent-blue);
+}
+
+.mat-mdc-unelevated-button.mat-primary {
+  --mdc-filled-button-container-color: var(--accent-blue);
+  --mdc-filled-button-label-text-color: #fff;
+}
+
+.mat-mdc-button {
+  color: var(--text-secondary) !important;
+}
+
+/* Confirm Dialog panel */
+.confirm-dialog-panel .mat-mdc-dialog-container {
+  --mdc-dialog-container-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px !important;
+  border-top: 3px solid var(--accent-red);
+}
+
+.confirm-dialog-panel .mat-mdc-dialog-surface {
+  background: var(--bg-card) !important;
+  border-radius: 16px !important;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+/* Shared Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+  border: none;
+  font-family: inherit;
+}
+
+.btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.btn--outline {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn--outline:hover {
+  background: var(--bg-card-hover);
+}
+
+.btn--primary {
+  background: var(--accent-blue);
+  color: #fff;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-blue) 85%, #000);
+}
+
+.btn--primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn--danger {
+  background: color-mix(in srgb, var(--accent-red) 15%, var(--bg-card));
+  color: var(--accent-red);
+  border: 1px solid color-mix(in srgb, var(--accent-red) 30%, transparent);
+}
+
+.btn--danger:hover {
+  background: color-mix(in srgb, var(--accent-red) 25%, var(--bg-card));
+}
+
+.btn--lg {
+  padding: 0.65rem 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Shared Custom Select */
+.custom-select {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.custom-select__input {
+  width: 100%;
+  padding: 0.7rem 2.25rem 0.7rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.custom-select__input:focus {
+  border-color: var(--accent-blue);
+}
+
+.custom-select__input option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.custom-select__arrow {
+  position: absolute;
+  right: 8px;
+  color: var(--text-muted);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+/* Shared Input with Suffix */
+.input-with-suffix {
+  display: flex;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.input-with-suffix:focus-within {
+  border-color: var(--accent-blue);
+}
+
+.input-with-suffix__input {
+  flex: 1;
+  padding: 0.7rem 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.input-with-suffix__input::placeholder {
+  color: var(--text-muted);
+}
+
+.input-with-suffix__suffix {
+  padding: 0.7rem 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  border-left: 1px solid var(--border-color);
+  background: color-mix(in srgb, var(--bg-input) 80%, #000);
+}
+
+/* Shared Form Validation */
+.field-error {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--accent-red);
+}
+
+/* Shared Pair Icon Colors */
+.pair-icon--btc {
+  background: color-mix(in srgb, var(--accent-orange) 20%, transparent);
+  color: var(--accent-orange);
+}
+
+.pair-icon--eth {
+  background: color-mix(in srgb, var(--accent-purple) 20%, transparent);
+  color: var(--accent-purple);
+}
+
+.pair-icon--eur {
+  background: color-mix(in srgb, var(--accent-blue) 20%, transparent);
+  color: var(--accent-blue);
+}
+
+.pair-icon--default {
+  background: color-mix(in srgb, var(--text-secondary) 20%, transparent);
+  color: var(--text-secondary);
+}

@@ -1,0 +1,232 @@
+@if (loading()) {
+<div class="detail__center">
+  <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
+</div>
+} @else if (error()) {
+<div class="detail__alert" role="alert">{{ error() }}</div>
+} @else if (order(); as o) {
+
+<!-- Breadcrumb & Header -->
+<div class="detail__breadcrumb">
+  <a routerLink="/trades" class="detail__breadcrumb-link">Orders</a>
+  <mat-icon class="detail__breadcrumb-sep">chevron_right</mat-icon>
+  <span class="detail__breadcrumb-current">ORD-{{ truncateId(o.id) }}</span>
+</div>
+
+<div class="detail__header">
+  <div>
+    <h1 class="detail__title">Order Details</h1>
+    <p class="detail__subtitle">Comprehensive audit and management for trade entry ORD-{{ truncateId(o.id) }}</p>
+  </div>
+  <div class="detail__header-actions">
+    @if (!editing()) {
+    <button class="btn btn--outline" (click)="enableEdit()">
+      <mat-icon>edit</mat-icon>
+      Edit Order
+    </button>
+    <button class="btn btn--danger" (click)="deleteOrder()">
+      <mat-icon>cancel</mat-icon>
+      Cancel Trade
+    </button>
+    }
+  </div>
+</div>
+
+<div class="detail__layout">
+  <!-- Left Column: Order Info -->
+  <div class="detail__left">
+    <!-- Trading Pair Card -->
+    <div class="info-card">
+      <div class="info-card__header">
+        <span class="info-card__label">TRADING PAIR</span>
+        <span class="status-badge status-badge--{{ o.status.toLowerCase() }}">{{ o.status | uppercase }}</span>
+      </div>
+      <div class="info-card__pair">
+        <span [class]="getPairIconClass()" class="info-card__pair-icon-inline">{{ getPairIconLetter() }}</span>
+        <span class="info-card__pair-name">{{ getPairBase() }} / {{ getPairQuote() }}</span>
+        <mat-icon class="info-card__pair-chart">trending_up</mat-icon>
+      </div>
+
+      <div class="info-card__details">
+        <div class="info-card__row">
+          <span class="info-card__row-label">Side</span>
+          <span class="info-card__row-value info-card__row-value--{{ o.side.toLowerCase() }}">
+            {{ o.side | uppercase }}
+          </span>
+        </div>
+        <div class="info-card__row">
+          <span class="info-card__row-label">Order Type</span>
+          <span class="info-card__row-value">{{ o.type | titlecase }} Order</span>
+        </div>
+        <div class="info-card__row">
+          <span class="info-card__row-label">Execution Venue</span>
+          <span class="info-card__row-value">Binance Spot</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timestamps Card -->
+    <div class="info-card">
+      <div class="info-card__header">
+        <span class="info-card__label">TIMESTAMPS</span>
+        <mat-icon class="info-card__header-icon">schedule</mat-icon>
+      </div>
+      <div class="info-card__details">
+        <div class="info-card__row">
+          <span class="info-card__row-label">Created</span>
+          <span class="info-card__row-value info-card__row-value--mono">{{ o.createdAt | date: 'yyyy-MM-dd HH:mm:ss.SSS' }}</span>
+        </div>
+        <div class="info-card__row">
+          <span class="info-card__row-label">Last Modified</span>
+          <span class="info-card__row-value info-card__row-value--mono">
+            {{ o.updatedAt ? (o.updatedAt | date: 'yyyy-MM-dd HH:mm:ss.SSS') : '—' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Order Parameters (Editable) -->
+  <div class="detail__right">
+    <h2 class="detail__section-title">Order Parameters</h2>
+
+    <form [formGroup]="form" (ngSubmit)="saveOrder()">
+      <div class="params-grid">
+        <!-- Amount -->
+        <div class="param-field">
+          <label class="param-field__label">ORDER AMOUNT ({{ getPairBase() }})</label>
+          @if (editing()) {
+          <div class="input-with-suffix">
+            <input type="text" formControlName="amount" inputmode="decimal" autocomplete="off"
+              class="input-with-suffix__input" />
+            <span class="input-with-suffix__suffix">{{ getPairBase() }}</span>
+          </div>
+          @if (form.controls.amount.touched && form.controls.amount.hasError('pattern')) {
+          <span class="field-error">Max 2 decimal places</span>
+          }
+          } @else {
+          <div class="param-field__readonly">
+            <span class="param-field__value">{{ o.amount }}</span>
+            <span class="param-field__unit">{{ getPairBase() }}</span>
+          </div>
+          }
+        </div>
+
+        <!-- Price -->
+        <div class="param-field">
+          <label class="param-field__label">LIMIT PRICE ({{ getPairQuote() }})</label>
+          @if (editing()) {
+          <div class="input-with-suffix">
+            <input type="text" formControlName="price" inputmode="decimal" autocomplete="off"
+              class="input-with-suffix__input" />
+            <span class="input-with-suffix__suffix">{{ getPairQuote() }}</span>
+          </div>
+          @if (form.controls.price.touched && form.controls.price.hasError('pattern')) {
+          <span class="field-error">Max 5 decimal places</span>
+          }
+          } @else {
+          <div class="param-field__readonly">
+            <span class="param-field__value">{{ o.price }}</span>
+            <span class="param-field__unit">{{ getPairQuote() }}</span>
+          </div>
+          }
+          <span class="param-field__hint">Current Market: {{ getMarketPrice() | currency: 'USD':'symbol':'1.2-2' }}</span>
+        </div>
+
+        <!-- Total Cost -->
+        <div class="param-field">
+          <label class="param-field__label">TOTAL COST (ESTIMATED)</label>
+          <div class="param-field__readonly">
+            <span class="param-field__value">{{ getTotalCost() | currency: 'USD':'':'1.2-2' }}</span>
+            <span class="param-field__unit">{{ getPairQuote() }}</span>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="param-field">
+          <label class="param-field__label">ORDER STATUS</label>
+          @if (editing()) {
+          <div class="custom-select">
+            <select formControlName="status" class="custom-select__input">
+              @for (s of statuses; track s) {
+              <option [value]="s">{{ s | titlecase }}</option>
+              }
+            </select>
+            <mat-icon class="custom-select__arrow">expand_more</mat-icon>
+          </div>
+          } @else {
+          <div class="param-field__readonly">
+            <span class="status-dot status-dot--{{ o.status.toLowerCase() }}"></span>
+            <span class="param-field__value">{{ o.status | titlecase }}</span>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Risk Controls Section -->
+      <h3 class="detail__subsection-title">RISK CONTROLS</h3>
+      <div class="params-grid params-grid--3">
+        <div class="param-field">
+          <label class="param-field__label">Stop Loss</label>
+          <div class="param-field__readonly param-field__readonly--muted">
+            <span class="param-field__value">—</span>
+          </div>
+        </div>
+        <div class="param-field">
+          <label class="param-field__label">Take Profit</label>
+          <div class="param-field__readonly param-field__readonly--muted">
+            <span class="param-field__value">—</span>
+          </div>
+        </div>
+        <div class="param-field">
+          <label class="param-field__label">Time in Force</label>
+          <div class="param-field__readonly">
+            <span class="param-field__value">GTC (Good Till Cancelled)</span>
+          </div>
+        </div>
+      </div>
+
+      @if (editing()) {
+      <div class="detail__form-actions">
+        <button type="button" class="btn btn--outline" (click)="cancelEdit()">Cancel Changes</button>
+        <button type="submit" class="btn btn--primary btn--lg" [disabled]="saving()">
+          @if (saving()) {
+          Saving…
+          } @else {
+          Save Order Modifications
+          }
+        </button>
+      </div>
+      }
+    </form>
+
+    <!-- Projected Execution Pathway -->
+    <div class="execution-card">
+      <div class="execution-card__header">
+        <div class="execution-card__header-left">
+          <mat-icon class="execution-card__icon">show_chart</mat-icon>
+          <div>
+            <span class="execution-card__title">Projected Execution Pathway</span>
+            <span class="execution-card__subtitle">Liquidity analysis for the current market depth</span>
+          </div>
+        </div>
+        <div class="execution-card__slippage">
+          <span class="execution-card__slippage-label">SLIPPAGE TOLERANCE</span>
+          <span class="execution-card__slippage-value">0.02%</span>
+        </div>
+      </div>
+      <div class="execution-card__chart">
+        <div class="execution-card__bars">
+          @for (h of [35, 50, 30, 65, 55, 70, 60, 80, 55, 45, 70, 50]; track $index) {
+          <div class="execution-card__bar"
+            [style.height.%]="h"
+            [class.execution-card__bar--green]="$index >= 3 && $index <= 7"
+            [class.execution-card__bar--light]="$index < 3 || $index > 7">
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}

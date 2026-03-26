@@ -1,0 +1,21 @@
+<div class="confirm-dialog">
+  <div class="confirm-dialog__icon-wrapper">
+    <mat-icon class="confirm-dialog__icon">warning</mat-icon>
+  </div>
+
+  <h2 class="confirm-dialog__title">Confirm Cancellation</h2>
+
+  <p class="confirm-dialog__body">
+    Are you sure you want to delete order
+    <code class="confirm-dialog__order-id">{{ data.orderId }}</code>?
+    This action cannot be undone and will immediately remove your liquidity from the order book.
+  </p>
+
+  <button class="confirm-dialog__confirm-btn" (click)="dialogRef.close(true)">
+    CONFIRM CANCELLATION
+  </button>
+
+  <button class="confirm-dialog__cancel-btn" (click)="dialogRef.close(false)">
+    Cancel
+  </button>
+</div>

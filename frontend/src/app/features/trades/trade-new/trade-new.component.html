@@ -1,0 +1,159 @@
+<h1 class="trade-new__title">New Execution</h1>
+<p class="trade-new__subtitle">
+  Precision-grade order placement with real-time liquidity mapping. All trades
+  are executed via the Nocturne matching engine.
+</p>
+
+<div class="trade-new__layout">
+  <!-- Left: Order Form -->
+  <div class="order-form">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <!-- Transaction Side -->
+      <div class="form-section">
+        <label class="form-label">TRANSACTION SIDE</label>
+        <div class="side-toggle">
+          <button type="button" class="side-toggle__btn"
+            [class.side-toggle__btn--buy-active]="form.controls.side.value === 'buy'" (click)="selectSide('buy')">
+            BUY
+          </button>
+          <button type="button" class="side-toggle__btn"
+            [class.side-toggle__btn--sell-active]="form.controls.side.value === 'sell'" (click)="selectSide('sell')">
+            SELL
+          </button>
+        </div>
+      </div>
+
+      <!-- Pair + Type row -->
+      <div class="form-row">
+        <div class="form-section form-section--half">
+          <label class="form-label">INSTRUMENT PAIR</label>
+          <div class="custom-select">
+            <select formControlName="pair" class="custom-select__input" (change)="validatePrice()">
+              @for (p of supportedPairs; track p) {
+              <option [value]="p">{{ p }}</option>
+              }
+            </select>
+            <mat-icon class="custom-select__arrow">expand_more</mat-icon>
+          </div>
+        </div>
+        <div class="form-section form-section--half">
+          <label class="form-label">ORDER TYPE</label>
+          <div class="custom-select">
+            <select formControlName="type" class="custom-select__input" (change)="validatePrice()">
+              @for (t of types; track t) {
+              <option [value]="t">{{ t | uppercase }}</option>
+              }
+            </select>
+            <mat-icon class="custom-select__arrow">expand_more</mat-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Amount + Price row -->
+      <div class="form-row">
+        <div class="form-section form-section--half">
+          <label class="form-label">ORDER AMOUNT</label>
+          <div class="input-with-suffix">
+            <input type="text" formControlName="amount" inputmode="decimal" autocomplete="off"
+              class="input-with-suffix__input" placeholder="0.00" />
+            <span class="input-with-suffix__suffix">{{ getPairSuffix() }}</span>
+          </div>
+          @if (form.controls.amount.touched && form.controls.amount.hasError('required')) {
+          <span class="field-error">Amount is required</span>
+          } @else if (form.controls.amount.touched && form.controls.amount.hasError('pattern')) {
+          <span class="field-error">Max 2 decimal places (e.g. 1.25)</span>
+          }
+        </div>
+        <div class="form-section form-section--half">
+          <label class="form-label">EXECUTION PRICE</label>
+          <div class="input-with-suffix">
+            <input type="text" formControlName="price" inputmode="decimal" autocomplete="off"
+              class="input-with-suffix__input" placeholder="0.00000" (input)="validatePrice()" />
+            <span class="input-with-suffix__suffix">USD</span>
+          </div>
+          @if (form.controls.price.touched && form.controls.price.hasError('required')) {
+          <span class="field-error">Price is required</span>
+          } @else if (form.controls.price.touched && form.controls.price.hasError('pattern')) {
+          <span class="field-error">Max 5 decimal places</span>
+          }
+          @if (priceValidationError()) {
+          <span class="field-error field-error--warning">
+            <mat-icon class="field-error__icon">error</mat-icon>
+            {{ priceValidationError() | uppercase }}
+          </span>
+          }
+        </div>
+      </div>
+
+      <!-- Cost Summary -->
+      <div class="cost-summary">
+        <div class="cost-summary__row">
+          <span class="cost-summary__label">Estimated Fee</span>
+          <span class="cost-summary__value">{{ estimatedFee() | currency: 'USD':'symbol':'1.2-2' }}</span>
+        </div>
+        <div class="cost-summary__row cost-summary__row--total">
+          <span class="cost-summary__label">Total Cost</span>
+          <span class="cost-summary__value cost-summary__value--large">{{ totalCost() | currency: 'USD':'symbol':'1.2-2'
+            }}</span>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="place-order-btn" [disabled]="submitting()">
+        @if (submitting()) {
+        Placing Order…
+        } @else {
+        Place Order
+        <mat-icon>double_arrow</mat-icon>
+        }
+      </button>
+    </form>
+  </div>
+
+  <!-- Right: Market Data Sidebar -->
+  <aside class="market-panel">
+    <div class="market-panel__header">
+      <span class="market-panel__dot"></span>
+      LIVE MARKET DATA
+    </div>
+
+    @for (ticker of marketTickers; track ticker.pair) {
+    <div class="ticker-row">
+      <div class="ticker-row__left">
+        <span class="ticker-icon" [class]="ticker.iconClass">{{ ticker.iconLetter }}</span>
+        <div class="ticker-row__info">
+          <span class="ticker-row__pair">{{ ticker.pair }}</span>
+          <span class="ticker-row__label">{{ ticker.label }}</span>
+        </div>
+      </div>
+      <div class="ticker-row__right">
+        <span class="ticker-row__price">{{ ticker.price | number: '1.1-5' }}</span>
+        <span class="ticker-row__change" [class.ticker-row__change--up]="ticker.change >= 0"
+          [class.ticker-row__change--down]="ticker.change < 0">
+          {{ ticker.change >= 0 ? '+' : '' }}{{ ticker.change | number: '1.2-2' }}%
+        </span>
+      </div>
+    </div>
+    }
+
+    <!-- Market Sentiment -->
+    <div class="sentiment-card">
+      <div class="sentiment-card__chart"></div>
+      <span class="sentiment-card__label">MARKET SENTIMENT</span>
+      <span class="sentiment-card__value">STRONG BUY</span>
+    </div>
+
+    <!-- Regulation Notice -->
+    <div class="regulation-notice">
+      <div class="regulation-notice__header">
+        <mat-icon>warning</mat-icon>
+        REGULATION NOTICE
+      </div>
+      <p class="regulation-notice__text">
+        Orders exceeding $100k equivalent require Tier 3 verification.
+        Market volatility is currently high (VIX: 24.2).
+        Slip protection is enabled at 0.5% threshold.
+      </p>
+    </div>
+  </aside>
+</div>

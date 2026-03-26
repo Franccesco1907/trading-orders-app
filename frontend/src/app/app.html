@@ -1,0 +1,74 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar__equity-card">
+      <span class="sidebar__equity-label">GLOBAL EQUITY</span>
+      <span class="sidebar__equity-value">$1,240,500.00</span>
+      <button class="sidebar__deposit-btn" type="button">Deposit Funds</button>
+    </div>
+
+    <nav class="sidebar__nav" aria-label="Main navigation">
+      <a class="sidebar__nav-item">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      <a class="sidebar__nav-item" routerLink="/trades" routerLinkActive="sidebar__nav-item--active">
+        <mat-icon>description</mat-icon>
+        <span>Orders</span>
+      </a>
+      <a class="sidebar__nav-item">
+        <mat-icon>work_outline</mat-icon>
+        <span>Portfolio</span>
+      </a>
+      <a class="sidebar__nav-item">
+        <mat-icon>history</mat-icon>
+        <span>History</span>
+      </a>
+      <a class="sidebar__nav-item">
+        <mat-icon>bar_chart</mat-icon>
+        <span>Analytics</span>
+      </a>
+    </nav>
+
+    <div class="sidebar__footer">
+      <a class="sidebar__nav-item">
+        <mat-icon>help_outline</mat-icon>
+        <span>Support</span>
+      </a>
+      <a class="sidebar__nav-item">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="top-header">
+      <span class="top-header__brand">FX REPLAY</span>
+      <nav class="top-header__tabs" aria-label="Trade tabs">
+        <a class="top-header__tab" routerLink="/trades" routerLinkActive="top-header__tab--active"
+          [routerLinkActiveOptions]="{ exact: true }">Trades</a>
+        <a class="top-header__tab" routerLink="/trades/new" routerLinkActive="top-header__tab--active">New Trade</a>
+      </nav>
+      <span class="top-header__spacer"></span>
+      <div class="top-header__search">
+        <mat-icon class="top-header__search-icon">search</mat-icon>
+        <input type="text" placeholder="Search orders..." class="top-header__search-input" />
+      </div>
+      <div class="top-header__actions">
+        <button class="top-header__icon-btn" type="button" aria-label="Notifications">
+          <mat-icon>notifications_none</mat-icon>
+        </button>
+        <button class="top-header__icon-btn" type="button" aria-label="Settings">
+          <mat-icon>settings</mat-icon>
+        </button>
+        <button class="top-header__icon-btn top-header__avatar" type="button" aria-label="User menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-main" id="main-content" tabindex="-1">
+      <router-outlet />
+    </main>
+  </div>
+</div>
